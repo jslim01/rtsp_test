@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  rtsp-server:
+    image: bluenviron/mediamtx:latest
+    container_name: rtsp-server
+    restart: unless-stopped
+    ports:
+      - "8554:8554"  # RTSP 포트
+      - "1935:1935"  # RTMP 포트 (옵션)
+      - "8888:8888"  # WebRTC 포트 (옵션)
+    environment:
+      - MTX_PROTOCOLS=tcp
+      - MTX_READ_BUFFER_COUNT=512
+    volumes:
+      - ./mediamtx.yml:/mediamtx.yml
+    networks:
+      - media_network
+
+  ffmpeg-stream:
+    image: linuxserver/ffmpeg:latest
+    container_name: ffmpeg-stream
+    restart: unless-stopped
+    depends_on:
+      - rtsp-server
+    entrypoint: ["/bin/sh", "/entrypoint.sh"]
+    volumes:
+      - ./videos:/videos  # 스트리밍할 영상 파일 저장 경로
+      - ./entrypoint.sh:/entrypoint.sh
+    networks:
+      - media_network
+
+networks:
+  media_network:
+
