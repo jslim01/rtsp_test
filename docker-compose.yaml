@@ -17,13 +17,48 @@ services:
     networks:
       - media_network
 
-  ffmpeg-stream:
+  ffmpeg-stream-1:
     image: linuxserver/ffmpeg:latest
-    container_name: ffmpeg-stream
+    container_name: ffmpeg-stream-1
     restart: unless-stopped
     depends_on:
       - rtsp-server
     entrypoint: ["/bin/sh", "/entrypoint.sh"]
+    environment:
+      - VIDEO_PATH=/videos/video1.mp4
+      - RTSP_PATH=/stream1
+    volumes:
+      - ./videos:/videos  # 스트리밍할 영상 파일 저장 경로
+      - ./entrypoint.sh:/entrypoint.sh
+    networks:
+      - media_network
+
+  ffmpeg-stream-2:
+    image: linuxserver/ffmpeg:latest
+    container_name: ffmpeg-stream-2
+    restart: unless-stopped
+    depends_on:
+      - rtsp-server
+    entrypoint: ["/bin/sh", "/entrypoint.sh"]
+    environment:
+      - VIDEO_PATH=/videos/video2.mp4
+      - RTSP_PATH=/stream2
+    volumes:
+      - ./videos:/videos  # 스트리밍할 영상 파일 저장 경로
+      - ./entrypoint.sh:/entrypoint.sh
+    networks:
+      - media_network
+
+  ffmpeg-stream-3:
+    image: linuxserver/ffmpeg:latest
+    container_name: ffmpeg-stream-3
+    restart: unless-stopped
+    depends_on:
+      - rtsp-server
+    entrypoint: ["/bin/sh", "/entrypoint.sh"]
+    environment:
+      - VIDEO_PATH=/videos/video3.mp4
+      - RTSP_PATH=/stream3
     volumes:
       - ./videos:/videos  # 스트리밍할 영상 파일 저장 경로
       - ./entrypoint.sh:/entrypoint.sh
